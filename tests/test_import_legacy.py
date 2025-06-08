@@ -1,8 +1,3 @@
-"""This module tests the import of the two singleton base classes."""
-
-from singleton_base.singleton_base_legacy import SingletonBase as LegacyBase
-
-
 class TestImportsLegacy:
     """Test class for checking imports of singleton base classes."""
 
@@ -11,6 +6,7 @@ class TestImportsLegacy:
         import sys
 
         from singleton_base import SingletonBase as ImportedBase
+        from singleton_base.singleton_base_legacy import SingletonBase as LegacyBase
 
         if sys.version_info <= (3, 11):
             assert isinstance(ImportedBase, type(LegacyBase))

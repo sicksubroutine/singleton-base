@@ -1,6 +1,3 @@
-"""This module tests the import of the two singleton base classes."""
-
-
 class TestImportsModern:
     """Test class for checking imports of singleton base classes."""
 

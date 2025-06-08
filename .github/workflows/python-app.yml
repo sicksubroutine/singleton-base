@@ -18,22 +18,12 @@ jobs:
       uses: astral-sh/setup-uv@v4
       with:
         version: "latest"
-    - name: Set up Python 3.12
-      run: uv python install 3.12
+    - name: Set up Python Versions
+      run: uv python install 3.9 3.10 3.11 3.12 3.13
     - name: Install dependencies
       run: |
         uv sync
         source .venv/bin/activate
-    - name: Lint with flake8
-      run: |
-        uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.venv
-        uv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=.venv
-    - name: Sort imports with isort
-      run: |
-        uv run isort . --check-only --diff --skip .venv --line-length 120
-    - name: Format with black
-      run: |
-        uv run black . --check --diff --exclude=.venv -l 120
-    - name: Test with nox
+    - name: Full Lint and Test Suite with Nox
       run: |
         uv run nox

@@ -4,7 +4,7 @@ __version__ = "1.0.2"
 
 
 try:
-    from typing import Self
+    from typing import Self  # noqa: F401
 
     HAS_SELF = True
 except Exception:
