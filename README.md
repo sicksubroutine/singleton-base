@@ -1,53 +1,69 @@
 # singleton-base
 
-A minimal helper library providing a base class for implementing the singleton pattern in Python. It supports modern type hints and thread-safe instance creation.
+A type-safe, thread-safe singleton base class for Python 3.9+. Very simple to use and test-friendly.
 
 ## Installation
 
-Install from PyPI with `pip`:
+### Using pip
 
 ```bash
 pip install singleton-base
 ```
 
-Or with [uv](https://github.com/astral-sh/uv):
+### Using Uv
 
 ```bash
-uv pip install singleton-base
+uv add singleton-base
 ```
 
-For development you can install the project in editable mode:
+### Using Poetry
 
 ```bash
-uv pip install -e .
+poetry add singleton-base
 ```
+
+## Features
+
+- Thread-safe: Multiple threads can safely create instances
+- Type-safe: Full type hint support with modern typing on Python 3.11+
+- Version adaptive: Automatically uses legacy implementation on Python < 3.11
+- Test-friendly: Easy instance management for testing scenarios
 
 ## Usage
 
-Subclass `SingletonBase` to make your class a singleton:
+### Basic Singleton
+
+Subclass SingletonBase to make your class a singleton. All instances will be the same object.
 
 ```python
 from singleton_base import SingletonBase
 
-class Config(SingletonBase):
+class MySingleton(SingletonBase):
     def __init__(self, value: int):
         self.value = value
 
-# first call creates the instance
-config = Config.get_instance(init=True, value=42)
+# Usage
+singleton_instance = MySingleton(42)
+# Also Valid
+singleton_instance2 = MySingleton.get_instance(init=True, value=42)
 
-# subsequent calls return the same instance
-same_config = Config()
-assert config is same_config
-print(config.value)
+# If you do this get_instance without init=True and an instance doesn't exist, it will give an RuntimeError:
+singleton_instance2 = MySingleton.get_instance(value=42)
+
+# Assuming the instance was correctly corrected and you are in another context:
+singleton_instance3 = MySingleton.get_instance()
 ```
 
-`get_instance` ensures only one object exists. `reset_instance` removes the existing instance so a new one can be created.
+### Available Methods
 
-## Testing
+| Method                             | Description                                                      |
+| ---------------------------------- | ---------------------------------------------------------------- |
+| get_instance(init=False, **kwargs) | Returns singleton instance. If init=True, creates it with kwargs |
+| has_instance()                     | Returns True if singleton instance exists                        |
+| reset_instance()                   | Destroys current instance, allows creating a new one             |
 
-Run the full test suite with nox:
+## Python Version Compatibility
 
-```bash
-nox -s test_all_tests
-```
+Python 3.11+ uses modern implementation with more modern type hints.
+Python 3.9-3.10 automatically falls back to legacy implementation.
+Full test coverage across all supported versions.
