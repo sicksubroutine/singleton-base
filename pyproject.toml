@@ -1,6 +1,6 @@
 [project]
 name = "singleton-base"
-version = "1.0.2"
+version = "1.0.3"
 description = "A type-friendly, thread-safe singleton base class for Python 3.9+. Very simple to use and test-friendly."
 readme = "README.md"
 authors = [

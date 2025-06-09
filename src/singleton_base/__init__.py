@@ -1,6 +1,6 @@
 """Singleton Base Class to make any other class a singleton with proper type hinting."""
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 
 try:
