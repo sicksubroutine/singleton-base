@@ -84,3 +84,14 @@ print(new_singleton.value)  # 69
 Python 3.11+ uses modern implementation with more modern type hints.
 Python 3.9-3.10 automatically falls back to legacy implementation.
 Full test coverage across all supported versions.
+
+## Testing
+
+Run the full test suite with [nox](https://nox.thea.codes/):
+
+```bash
+nox -s test_all_tests
+```
+
+This command spins up test environments for every Python version configured in
+``noxfile.py`` and executes all tests within each environment.
