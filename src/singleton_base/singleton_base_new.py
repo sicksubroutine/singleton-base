@@ -8,10 +8,11 @@ class SingletonMeta(type):
     _lock: ClassVar[RLock] = RLock()
 
     def __call__(cls, *args, **kwargs):
-        """Return the singleton instance of the class.
+        """
+        Return the singleton instance of the class.
 
         If the instance does not yet exist, it is created using the provided
-        arguments.
+        arguments. Uses a lock to ensure thread safety.
 
         Args:
             *args: Positional arguments forwarded to the class constructor.
@@ -41,7 +42,9 @@ class SingletonBase(metaclass=SingletonMeta):
 
     @classmethod
     def get_instance(cls, init: bool = False, **kwargs) -> Self:
-        """Return the singleton instance.
+        """
+        Return the singleton instance. If the instance does not yet exist, it is created using the provided
+        arguments. Uses a lock to ensure thread safety.
 
         Args:
             init: Whether to initialize the instance if it does not yet exist.
@@ -63,7 +66,8 @@ class SingletonBase(metaclass=SingletonMeta):
 
     @classmethod
     def has_instance(cls) -> bool:
-        """Return ``True`` if the singleton instance has been initialized.
+        """
+        Return ``True`` if the singleton instance has been initialized.
 
         Returns:
             bool: ``True`` if the instance exists, ``False`` otherwise.
@@ -72,10 +76,10 @@ class SingletonBase(metaclass=SingletonMeta):
 
     @classmethod
     def reset_instance(cls) -> None:
-        """Reset the singleton instance to allow re-initialization.
+        """
+        Reset the singleton instance to allow re-initialization.
 
-        Returns:
-            None
+        Uses a lock to ensure thread safety.
         """
         with cls._lock:
             cls._instance = None

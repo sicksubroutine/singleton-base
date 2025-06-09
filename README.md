@@ -1,6 +1,6 @@
 # singleton-base
 
-A type-safe, thread-safe singleton base class for Python 3.9+. Very simple to use and test-friendly.
+A type-friendly, thread-safe singleton base class for Python 3.9+. Very simple to use and test-friendly.
 
 ## Installation
 
@@ -25,7 +25,7 @@ poetry add singleton-base
 ## Features
 
 - Thread-safe: Multiple threads can safely create instances
-- Type-safe: Full type hint support with modern typing on Python 3.11+
+- Type-friendly: Full type hint support with modern typing on Python 3.11+
 - Version adaptive: Automatically uses legacy implementation on Python < 3.11
 - Test-friendly: Easy instance management for testing scenarios
 
@@ -84,14 +84,3 @@ print(new_singleton.value)  # 69
 Python 3.11+ uses modern implementation with more modern type hints.
 Python 3.9-3.10 automatically falls back to legacy implementation.
 Full test coverage across all supported versions.
-
-## Testing
-
-Run the full test suite with [nox](https://nox.thea.codes/):
-
-```bash
-nox -s test_all_tests
-```
-
-This command spins up test environments for every Python version configured in
-``noxfile.py`` and executes all tests within each environment.

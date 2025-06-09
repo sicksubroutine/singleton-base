@@ -13,3 +13,9 @@
 - Endeavor to use a TDD approach when writing new code. Write tests first, then write the code to make the tests pass and then refactor the code to make it cleaner and more readable.
 - There is a `directory_structure.txt` file in the root of the repository that describes the directory structure of the project. Use this as a quick way to understand the project structure and where to place new files or modules.
 - While projects might partially use Poetry, UV is generally the preferred tool for managing dependencies and virtual environments. It is taking me some time to get used to it, so please bear with me. If you are not sure about something, ask the user.
+
+<!-- rTree -->
+
+## Directory Structure
+
+<!-- /rTree -->
