@@ -7,15 +7,18 @@ class SingletonMeta(type):
 
     _lock: ClassVar[RLock] = RLock()
 
-    def __call__(cls, *args, **kwargs) -> object:
-        """Create or return the singleton instance.
+    def __call__(cls, *args, **kwargs):
+        """Return the singleton instance of the class.
+
+        If the instance does not yet exist, it is created using the provided
+        arguments.
 
         Args:
-            *args: Positional arguments for ``cls.__init__``.
-            **kwargs: Keyword arguments for ``cls.__init__``.
+            *args: Positional arguments forwarded to the class constructor.
+            **kwargs: Keyword arguments forwarded to the class constructor.
 
         Returns:
-            object: The singleton instance.
+            The singleton instance.
         """
         if not hasattr(cls, "_instance") or cls._instance is None:
             with cls._lock:
