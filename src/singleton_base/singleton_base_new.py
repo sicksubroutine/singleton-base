@@ -3,14 +3,20 @@ from typing import ClassVar, Self
 
 
 class SingletonMeta(type):
-    """
-    A metaclass for creating singleton classes.
-    This metaclass ensures that only one instance of the class exists.
-    """
+    """Metaclass that enforces the singleton pattern."""
 
     _lock: ClassVar[RLock] = RLock()
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args, **kwargs) -> object:
+        """Create or return the singleton instance.
+
+        Args:
+            *args: Positional arguments for ``cls.__init__``.
+            **kwargs: Keyword arguments for ``cls.__init__``.
+
+        Returns:
+            object: The singleton instance.
+        """
         if not hasattr(cls, "_instance") or cls._instance is None:
             with cls._lock:
                 if not hasattr(cls, "_instance") or cls._instance is None:
@@ -32,6 +38,18 @@ class SingletonBase(metaclass=SingletonMeta):
 
     @classmethod
     def get_instance(cls, init: bool = False, **kwargs) -> Self:
+        """Return the singleton instance.
+
+        Args:
+            init: Whether to initialize the instance if it does not yet exist.
+            **kwargs: Arguments passed to ``cls`` when creating the instance.
+
+        Returns:
+            Self: The singleton instance of the class.
+
+        Raises:
+            RuntimeError: If ``init`` is ``False`` and the instance has not been initialized.
+        """
         if cls._instance is None and not init:
             raise RuntimeError(f"Instance of {cls.__name__} is not initialized yet")
         elif cls._instance is None and init:
@@ -42,11 +60,19 @@ class SingletonBase(metaclass=SingletonMeta):
 
     @classmethod
     def has_instance(cls) -> bool:
-        """Check if the singleton instance has been initialized."""
+        """Return ``True`` if the singleton instance has been initialized.
+
+        Returns:
+            bool: ``True`` if the instance exists, ``False`` otherwise.
+        """
         return cls._instance is not None
 
     @classmethod
     def reset_instance(cls) -> None:
-        """Reset the singleton instance to allow re-initialization."""
+        """Reset the singleton instance to allow re-initialization.
+
+        Returns:
+            None
+        """
         with cls._lock:
             cls._instance = None
