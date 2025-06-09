@@ -32,6 +32,18 @@ class SingletonBase(metaclass=SingletonMeta):
 
     @classmethod
     def get_instance(cls, init: bool = False, **kwargs) -> Self:
+        """Return the singleton instance.
+
+        Args:
+            init: Whether to initialize the instance if it does not yet exist.
+            **kwargs: Arguments passed to ``cls`` when creating the instance.
+
+        Returns:
+            Self: The singleton instance of the class.
+
+        Raises:
+            RuntimeError: If ``init`` is ``False`` and the instance has not been initialized.
+        """
         if cls._instance is None and not init:
             raise RuntimeError(f"Instance of {cls.__name__} is not initialized yet")
         elif cls._instance is None and init:
