@@ -31,27 +31,44 @@ poetry add singleton-base
 
 ## Usage
 
-### Basic Singleton
+### Usage Example
 
-Subclass SingletonBase to make your class a singleton. All instances will be the same object.
+Subclass using SingletonBase to make your class a singleton. All returned instances will now be the same object.
 
 ```python
 from singleton_base import SingletonBase
 
 class MySingleton(SingletonBase):
-    def __init__(self, value: int):
-        self.value = value
+   def __init__(self, value: int):
+       self.value = value
 
-# Usage
+# Check if instance exists (initially False)
+print(MySingleton.has_instance())  # False
+
+# Create instance
 singleton_instance = MySingleton(42)
-# Also Valid
+print(MySingleton.has_instance())  # True
+
+# Alternative creation method
+MySingleton.reset_instance()  # Clear existing instance
 singleton_instance2 = MySingleton.get_instance(init=True, value=42)
+print(MySingleton.has_instance())  # True
 
-# If you do this get_instance without init=True and an instance doesn't exist, it will give an RuntimeError:
-singleton_instance2 = MySingleton.get_instance(value=42)
+# Get existing instance (safe - won't raise error)
+if MySingleton.has_instance():
+   singleton_instance3 = MySingleton.get_instance()
 
-# Assuming the instance was correctly corrected and you are in another context:
-singleton_instance3 = MySingleton.get_instance()
+# This would raise RuntimeError if no instance exists:
+# MySingleton.reset_instance()
+# singleton_instance = MySingleton.get_instance()  # RuntimeError!
+
+# Reset for testing or re-initialization
+MySingleton.reset_instance()
+print(MySingleton.has_instance())  # False
+
+# Now you can create a new instance with different values
+new_singleton = MySingleton(69)
+print(new_singleton.value)  # 69
 ```
 
 ### Available Methods
