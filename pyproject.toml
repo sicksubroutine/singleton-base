@@ -4,7 +4,7 @@ version = "1.0.2"
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "chaz", email = "git@tachyon.top" }
+    { name = "chaz", email = "pypi@tachyon.top" }
 ]
 requires-python = ">=3.9"
 dependencies = []
