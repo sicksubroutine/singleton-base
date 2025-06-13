@@ -1,5 +1,9 @@
 from threading import RLock
-from typing import ClassVar, TypeVar, Union
+from typing import Any, ClassVar, TypeVar, Union
+
+INSTANCE_NAME = "_instance_{instance_name}"
+
+T = TypeVar("T", bound="SingletonBase")
 
 
 class SingletonMeta(type):
@@ -7,34 +11,43 @@ class SingletonMeta(type):
 
     _lock: ClassVar[RLock] = RLock()
 
-    def __call__(cls, *args, **kwargs):
-        """
-        Return the singleton instance of the class.
-
-        If the instance does not yet exist, it is created using the provided
-        arguments. Uses a lock to ensure thread safety.
-
-        Args:
-            *args: Positional arguments forwarded to the class constructor.
-            **kwargs: Keyword arguments forwarded to the class constructor.
-
-        Returns:
-            The singleton instance.
-        """
-        if not hasattr(cls, "_instance") or cls._instance is None:
+    def __call__(cls, *args, **kwargs) -> Any:
+        class_attr_name: str = INSTANCE_NAME.format(instance_name=cls.__name__)
+        if not getattr(cls, class_attr_name, False):
             with cls._lock:
-                if not hasattr(cls, "_instance") or cls._instance is None:
-                    cls._instance = super().__call__(*args, **kwargs)
-        return cls._instance
-
-
-T = TypeVar("T", bound="SingletonBase")
+                if not getattr(cls, class_attr_name, False):
+                    setattr(cls, class_attr_name, super().__call__(*args, **kwargs))
+        return getattr(cls, class_attr_name)
 
 
 class SingletonBase(metaclass=SingletonMeta):
-    """A base class for singleton classes with a typed get_instance method."""
+    """A base class for singleton classes"""
 
-    _instance: ClassVar[Union[T, None]] = None  # type: ignore[assignment]
+    # region Private Class Methods
+
+    @classmethod
+    def __instance(cls: type[T]) -> T:
+        """Method used when we know the instance is present"""
+        return getattr(cls, cls._instance_attr())
+
+    @classmethod
+    def __set_instance(cls, value: Union[T, None]) -> None:
+        """Set the singleton instance to a new value"""
+        setattr(cls, cls._instance_attr(), value)
+
+    @classmethod
+    def __get_instance(cls: type[T]) -> Union[T, None]:
+        """Get the singleton instance, or None if it does not exist"""
+        return getattr(cls, cls._instance_attr(), None)
+
+    @classmethod
+    def _instance_attr(cls) -> str:
+        """Get the name of the class attribute that holds the singleton instance."""
+        return INSTANCE_NAME.format(instance_name=cls.__name__)
+
+    # endregion
+
+    # region Public Class Methods
 
     @classmethod
     def get_instance(cls: type[T], init: bool = False, **kwargs) -> T:
@@ -52,13 +65,13 @@ class SingletonBase(metaclass=SingletonMeta):
         Raises:
             RuntimeError: If ``init`` is ``False`` and the instance has not been initialized.
         """
-        if cls._instance is None and not init:
+        if not cls.has_instance() and not init:
             raise RuntimeError(f"Instance of {cls.__name__} is not initialized yet")
-        elif cls._instance is None and init:
+        elif not cls.has_instance() and init:
             with cls._lock:
-                if cls._instance is None:
-                    cls._instance = cls(**kwargs)
-        return cls._instance
+                if not cls.has_instance():
+                    cls.__set_instance(cls(**kwargs))
+        return cls.__instance()
 
     @classmethod
     def has_instance(cls) -> bool:
@@ -68,7 +81,7 @@ class SingletonBase(metaclass=SingletonMeta):
         Returns:
             bool: ``True`` if the instance exists, ``False`` otherwise.
         """
-        return cls._instance is not None
+        return cls.__get_instance() is not None
 
     @classmethod
     def reset_instance(cls) -> None:
@@ -78,4 +91,6 @@ class SingletonBase(metaclass=SingletonMeta):
         Uses a lock to ensure thread safety.
         """
         with cls._lock:
-            cls._instance = None
+            cls.__set_instance(None)
+
+    # endregion

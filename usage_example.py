@@ -50,4 +50,4 @@ if MySingleton.has_instance():
     print(f"Instance Already Exists: {MySingleton.has_instance()}, Value: {instance.value}")  # 69
 else:
     instance = MySingleton.get_instance(init=True, value=9001)
-    print(f"Instance Created: {MySingleton.has_instance()}, Value: {instance.value}")  # Won't be printed
+    print(f"Instance Created: {MySingleton.has_instance()}")  # Won't be printed

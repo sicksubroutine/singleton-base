@@ -2,18 +2,12 @@
 
 __version__ = "1.0.4"
 
+import sys
 
-try:
-    from typing import Self  # noqa: F401
-
-    HAS_SELF = True
-except Exception:
-    HAS_SELF = False
-
-if HAS_SELF:
-    from .singleton_base_new import SingletonBase
-else:
+if sys.version_info < (3, 11):
     from .singleton_base_legacy import SingletonBase
+else:
+    from .singleton_base_new import SingletonBase
 
 
 __all__ = ["SingletonBase", "__version__"]
