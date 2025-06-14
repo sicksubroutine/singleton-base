@@ -9,7 +9,7 @@ class SingletonMeta(type):
 
     _lock: ClassVar[RLock] = RLock()
 
-    def __call__(cls, *args, **kwargs) -> Any:
+    def __call__(cls, *args, **kwargs):
         class_attr_name: str = INSTANCE_NAME.format(instance_name=cls.__name__)
         if not getattr(cls, class_attr_name, False):
             with cls._lock:
